@@ -40,7 +40,5 @@ with the following format:
 
 ## Technology
 ![alt text](images/python+flask.jpg?raw=true "Python and Flask")
-github Flask: https://github.com/pallets/flask
 
 ![alt text](images/deap.png?raw=true "DEAP")
-github DEAP: https://github.com/DEAP/deap
