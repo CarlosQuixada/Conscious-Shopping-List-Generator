@@ -1,54 +1,29 @@
-# from Util import Util
 import json
 
 from flask import Flask, request, jsonify
 
 from app.genetic_algorithm import GeneticAlgorithm
 
-# from flask_cors import CORS, cross_origin
-# from gevent.pywsgi import WSGIServer
-# from healthcheck import HealthCheck, EnvironmentDump
-# from flasgger import Swagger, swag_from
-
 api = Flask('CSLG')
-
-# Documentation
-'''
-app.config['SWAGGER'] = {
-    "swagger_version": "2.0",
-    "title": "Delfos Documentation",
-    "headers": [
-        ('Access-Control-Allow-Origin', '*'),
-        ('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, OPTIONS"),
-        ('Access-Control-Allow-Credentials', "true"),
-    ],
-    "specs": [
-        {
-            "version": "0.1.1",
-            "title": "Delfos V1",
-            "endpoint": 'v1_spec',
-            "description": 'Essa é a versão 1 do Delfos',
-            "route": '/v1/spec'
-        }
-    ]
-}
-
-swagger = Swagger(app)
-'''
 
 
 @api.route('/')
 def heath_check():
     """
-    Método utilizado como health check
-    :return: retorna apenas um 200 para confirmar que a API está de pé
+        Health check method
+    :return: message and status 200 to confirm API is standing
     """
+
     return "Faaaaaalllaaaa Galera blz?", 200
 
 
 @api.route('/generate-list', methods=['POST'])
-# @swag_from('documentation/complain_diderot_classification.yml')
 def generate_list():
+    """
+        Method responsible for generating the purchase suggestion, based on past parameters
+    :return: list with suggestions
+    """
+
     try:
         dreams_string = json.dumps(request.json, ensure_ascii=False)
         dreams = json.loads(dreams_string)

@@ -1,4 +1,4 @@
 class Dream:
-    def __init__(self, name, value):
+    def __init__(self, name, price):
         self.name = name
-        self.value = value
+        self.price = price
