@@ -65,6 +65,15 @@ class GeneticAlgorithm:
     # statistic.register("std", numpy.std)
 
     #    return statistic, tools
+    def create_response(self, best):
+        suggestion = []
+
+        for individuo in best:
+            for i in range(len(self.dreams)):
+                if individuo[i] == 1:
+                    suggestion.append({'name': self.dreams[i].name, 'price': self.dreams[i].value})
+
+        return {'suggestion': suggestion}
 
     def generate_list(self):
         toolbox = base.Toolbox()
@@ -100,13 +109,7 @@ class GeneticAlgorithm:
                                               probabilidade_mutacao,
                                               numero_geracoes, estatisticas)
 
-        melhores = tools.selBest(populacao, 1)
-        for individuo in melhores:
-            soma = 0
-            for i in range(len(self.dreams)):
-                if individuo[i] == 1:
-                    soma += self.values[i]
-                    print("Nome: %s R$ %s " % (self.dreams[i].name, self.dreams[i].value))
-            print("Melhor solução: %s" % soma)
+        best = tools.selBest(populacao, 1)
+        response = self.create_response(best)
 
-        return "Lengaaaaaall"
+        return response
