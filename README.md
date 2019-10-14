@@ -1,13 +1,6 @@
 # CSLG API
 
-This application generates dream list-based shopping suggestion lists and how much you can spend on that purchase.
-
-## Technology
-![alt text](images/python+flask.jpg?raw=true "Python and Flask")
-github Flask: https://github.com/pallets/flask
-
-![alt text](images/deap.png?raw=true "DEAP")
-github DEAP: https://github.com/DEAP/deap
+> This application generates dream list-based shopping suggestion lists and how much you can spend on that purchase.
 
 ## Workspace
 * `$ git clone git@github.com:CarlosQuixada/Conscious-Shopping-List-Generator.git`
@@ -44,3 +37,10 @@ with the following format:
 ```
 
 *Built by Carlos Quixadá*
+
+## Technology
+![alt text](images/python+flask.jpg?raw=true "Python and Flask")
+github Flask: https://github.com/pallets/flask
+
+![alt text](images/deap.png?raw=true "DEAP")
+github DEAP: https://github.com/DEAP/deap
