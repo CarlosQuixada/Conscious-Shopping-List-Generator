@@ -12,18 +12,6 @@ from app.genetic_algorithm import GeneticAlgorithm
 
 api = Flask('CSLG')
 
-# COR configurations
-# CORS(app, resources={r"/classify": {"origins": "*"}})
-# app.config['CORS_HEADERS'] = 'Content-Type'
-
-# Neura Network Loading
-# util = Util()
-
-# healthcheck
-# health = HealthCheck()
-# envdump = EnvironmentDump()
-
-
 # Documentation
 '''
 app.config['SWAGGER'] = {
@@ -47,46 +35,15 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 '''
-'''
-@app.after_request
-def after_request(response):
-    """
-        Método responsável pela tratamento de CORS da aplicação
-    :param response: reposta de cada requisição na API
-    :return: retorno da API com o cabeçalho de tratamento de CORS
-    """
-    header = response.headers
-    header['Access-Control-Allow-Origin'] = '*'
-    return response
-'''
 
 
 @api.route('/')
-# @cross_origin()
 def heath_check():
     """
     Método utilizado como health check
     :return: retorna apenas um 200 para confirmar que a API está de pé
     """
     return "Faaaaaalllaaaa Galera blz?", 200
-
-
-# def classfy_by_part(name):
-
-# health.add_check(heath_check)
-
-
-'''
-def application_data():
-    return {"maintainer": "Diego Santos",
-            "git_repo": "https://gitlab.com/trustvox/ai/delfos"}
-
-
-envdump.add_section("application", application_data)
-# Add a flask route to expose information
-app.add_url_rule("/healthcheck", "healthcheck", view_func=lambda: health.run())
-app.add_url_rule("/environment", "environment", view_func=lambda: envdump.run())
-'''
 
 
 @api.route('/generate-list', methods=['POST'])
@@ -102,7 +59,7 @@ def generate_list():
         return response
 
     except Exception as e:
-        return jsonify({"Exception": e})
+        return jsonify({"Exception": str(e)})
 
 
 @api.errorhandler(404)

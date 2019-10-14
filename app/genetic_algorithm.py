@@ -58,13 +58,6 @@ class GeneticAlgorithm:
 
         return creator, toolbox
 
-    # def __create_statistic(self):
-
-    # statistic.register("min", numpy.min)
-    # statistic.register("med", numpy.mean)
-    # statistic.register("std", numpy.std)
-
-    #    return statistic, tools
     def create_response(self, best):
         suggestion = []
 
@@ -75,41 +68,24 @@ class GeneticAlgorithm:
 
         return {'suggestion': suggestion}
 
+    def __create_statistic(self):
+        statistic = tools.Statistics(key=lambda individuo: individuo.fitness.values)
+        statistic.register("max", numpy.max)
+        statistic.register("min", numpy.min)
+        statistic.register("med", numpy.mean)
+        statistic.register("std", numpy.std)
+
+        return statistic
+
     def generate_list(self):
-        toolbox = base.Toolbox()
 
-        creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+        group = self.toolbox.population(n=20)
 
-        creator.create("Individual", list, fitness=creator.FitnessMax)
-        toolbox.register("attr_bool", random.randint, 0, 1)
-        toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=len(self.dreams))
-        toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+        statistic = self.__create_statistic()
+        group, info = algorithms.eaSimple(group, self.toolbox, self.probability_crossover,
+                                          self.probability_mutacao, self.numero_geracoes, statistic)
 
-        toolbox.register("evaluate", self.__evaluation)
-        toolbox.register("mate", tools.cxOnePoint)
-        toolbox.register("mutate", tools.mutFlipBit, indpb=0.01)
-        toolbox.register("select", tools.selRoulette)
-
-        populacao = toolbox.population(n=20)
-
-        probabilidade_crossover = 0.9
-
-        probabilidade_mutacao = 0.01
-
-        numero_geracoes = 100
-
-        estatisticas = tools.Statistics(key=lambda individuo: individuo.fitness.values)
-        estatisticas.register("max", numpy.max)
-        estatisticas.register("min", numpy.min)
-        estatisticas.register("med", numpy.mean)
-        estatisticas.register("std", numpy.std)
-
-        populacao, info = algorithms.eaSimple(populacao, toolbox,
-                                              probabilidade_crossover,
-                                              probabilidade_mutacao,
-                                              numero_geracoes, estatisticas)
-
-        best = tools.selBest(populacao, 1)
+        best = tools.selBest(group, 1)
         response = self.create_response(best)
 
         return response
