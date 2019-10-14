@@ -8,16 +8,22 @@ from app.model.dream import Dream
 
 class GeneticAlgorithm:
     def __init__(self, limit_spent, list_dreams):
-        self.probability_crossover = 0.9
-        self.probability_mutacao = 0.01
-        self.numero_geracoes = 100
+        self.__probability_crossover = 0.9
+        self.__probability_mutation = 0.01
+        self.__number_generations = 100
 
-        self.limit_spent = limit_spent
-        self.dreams, self.values = self.__create_dream(list_dreams)
+        self.__limit_spent = limit_spent
+        self.__dreams, self.values = self.__create_dream(list_dreams)
 
-        self.creator, self.toolbox = self.__deap_boot(self.dreams)
+        self.__toolbox = self.__deap_boot(self.__dreams)
 
     def __evaluation(self, individual):
+        """
+            Method of evaluation of the individuals in the generations of the genetic algorithm
+        :param individual: individual of the generation
+        :return:individual rank value
+        """
+
         amount_dreams = 0
         sum_prices = 0
 
@@ -26,21 +32,33 @@ class GeneticAlgorithm:
                 amount_dreams += 1
                 sum_prices += self.values[i]
 
-        if sum_prices > self.limit_spent:
+        if sum_prices > self.__limit_spent:
             amount_dreams = 1
 
         return amount_dreams / 100000,
 
     def __create_dream(self, list_dreams):
+        """
+            Method responsible for turning json dreams to object
+        :param list_dreams: dream list in json
+        :return: dream object list and dream price list
+        """
+
         dreams = []
         for dream in list_dreams:
-            dreams.append(Dream(dream['name'], dream['value']))
+            dreams.append(Dream(dream['name'], dream['price']))
 
-        values = [dream.value for dream in dreams]
+        values = [dream.price for dream in dreams]
 
         return dreams, values
 
     def __deap_boot(self, dreams):
+        """
+            Method responsible for lib deap initialization
+        :param dreams: dream list
+        :return: toolbox
+        """
+
         random.seed(1)
         toolbox = base.Toolbox()
 
@@ -56,19 +74,30 @@ class GeneticAlgorithm:
         toolbox.register("mutate", tools.mutFlipBit, indpb=0.01)
         toolbox.register("select", tools.selRoulette)
 
-        return creator, toolbox
+        return toolbox
 
-    def create_response(self, best):
+    def __create_response(self, best):
+        """
+            Method responsible for creating json purchase suggestion response
+        :param best: The best suggestion found by the algorithm
+        :return: suggestion list in json
+        """
+
         suggestion = []
 
         for individuo in best:
-            for i in range(len(self.dreams)):
+            for i in range(len(self.__dreams)):
                 if individuo[i] == 1:
-                    suggestion.append({'name': self.dreams[i].name, 'price': self.dreams[i].value})
+                    suggestion.append({'name': self.__dreams[i].name, 'price': self.__dreams[i].price})
 
         return {'suggestion': suggestion}
 
     def __create_statistic(self):
+        """
+            Method responsible for initializing the statistics used in the genetic algorithm.
+        :return: initialized statistic
+        """
+
         statistic = tools.Statistics(key=lambda individuo: individuo.fitness.values)
         statistic.register("max", numpy.max)
         statistic.register("min", numpy.min)
@@ -78,14 +107,18 @@ class GeneticAlgorithm:
         return statistic
 
     def generate_list(self):
+        """
+            Method responsible for executing purchase suggestion list generation.
+        :return: Json with the cuelist
+        """
 
-        group = self.toolbox.population(n=20)
+        group = self.__toolbox.population(n=20)
 
         statistic = self.__create_statistic()
-        group, info = algorithms.eaSimple(group, self.toolbox, self.probability_crossover,
-                                          self.probability_mutacao, self.numero_geracoes, statistic)
+        group, info = algorithms.eaSimple(group, self.__toolbox, self.__probability_crossover,
+                                          self.__probability_mutation, self.__number_generations, statistic)
 
         best = tools.selBest(group, 1)
-        response = self.create_response(best)
+        response = self.__create_response(best)
 
         return response
