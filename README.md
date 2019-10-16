@@ -11,9 +11,17 @@
 * `$ python run.py`
 * Visit the app at http://localhost:5000/
 
-### Use
+## Running by Docker
 
-To generate purchase suggestion list you must send a POST to endpoint / generate-list
+* `git clone git@github.com:CarlosQuixada/Conscious-Shopping-List-Generator.git`
+* `$ cd Conscious-Shopping-List-Generator`
+* `$ docker build -t cslg .`
+* `$ docker run -p 5000:5000 cslg`
+* Visit the app at http://localhost:5000/
+
+## Use
+
+To generate purchase suggestion list you must send a POST to endpoint `/generate-list`
 with the following format:
 
 ```
